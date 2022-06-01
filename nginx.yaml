@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: nginx-app
+  name: nginx-app
+  namespace: longhorn-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: nginx-app
+  template:
+    metadata:
+      labels:
+        run: nginx-app
+    spec:
+      volumes:
+      - name: nginx-vol
+        persistentVolumeClaim:
+          claimName: nginx-pvc
+      containers:
+      - image: nginx
+        name: nginx-app
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: nginx-vol
+          mountPath: /usr/share/nginx/html
